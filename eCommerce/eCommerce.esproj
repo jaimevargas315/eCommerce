@@ -2,6 +2,10 @@
   <PropertyGroup>
     <StartupCommand>npm start</StartupCommand>
     <!-- Command to run on project build -->
-    <BuildCommand></BuildCommand>
+    <BuildCommand>
+    </BuildCommand>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="db\" />
+  </ItemGroup>
 </Project>
