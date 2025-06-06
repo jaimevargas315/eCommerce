@@ -46,7 +46,7 @@ itemRouter.post('/items', async (req, res, next) => {
     }
 });
 
-customerRouter.put('/items:id', async (req, res, next) => {
+itemRouter.put('/items:id', async (req, res, next) => {
     const itemToUpdate = req.params.id;
     const { itemId, name, description, inStock } = req.body;
 

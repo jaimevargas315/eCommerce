@@ -6,7 +6,7 @@ const poolConfig = {
     password: password,
     host: '127.0.0.1',
     port: 5432,
-    database: 'postgres',
+    database: 'eCommerce',
 };
 const pool = new Pool(poolConfig);
 
@@ -29,6 +29,8 @@ async function checkConnection() {
 }
 
 await checkConnection();
+
+
 
 export const query = async (text, params) => {
     const start = Date.now()
