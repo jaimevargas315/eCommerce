@@ -16,17 +16,57 @@ const Register = () => {
       ...form,
       [e.target.name]: e.target.value,
     });
-    setError('');
+      setError('');
+      setSuccess(false);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (form.password !== form.confirmPassword) {
-      setError('Passwords do not match.');
-      return;
-    }
-    // TODO: Implement registration logic (API call)
-    setSuccess(true);
+  const handleSubmit = async (e) => {
+      e.preventDefault();
+      setError('');
+      setSuccess(false);
+      if (form.password !== form.confirmPassword) {
+          setError('Passwords do not match.');
+          return;
+      }
+      if (!form.username || !form.email || !form.password || !form.confirmPassword) {
+          setError('All fields are required.');
+          return;
+      }
+      try {
+          const response = await fetch('http://localhost:3001/auth/register', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  "username": form.username,
+                  "email": form.email,
+                  "password": form.password
+              }),
+          });
+          const data = await response.json();
+          if (response.ok) {
+              console.log('Registration successful:', data);
+              setSuccess(true);
+              setError('');
+              setForm({
+                    username: '',
+                    email: '',
+                    password: '',
+                    confirmPassword: ''
+              });
+          }
+          else {
+              console.error('Registration failed:', data);
+              setError(data.message || data.error || 'Registration failed');
+              setSuccess(false);
+          }
+      } catch (error) {
+          console.error('Error during registration:', error);
+          setError('An error occurred during registration. Please try again later.');
+          setSuccess(false);
+      }
+
   };
 
   return (

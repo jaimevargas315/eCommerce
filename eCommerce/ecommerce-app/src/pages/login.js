@@ -1,23 +1,56 @@
 import React, { useState } from 'react';
 
 const Login = () => {
+  const handleChange = (e) => {
+      setForm({ ...form, [e.target.name]: e.target.value });
+      setError(''); // Clear error on input change
+      setSuccess(false);
+  };
   const [form, setForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Implement authentication logic here
-    if (!form.username || !form.password) {
-      setError('Please enter both username and password.');
-      return;
-    }
-    setError('');
-    // Example: call API or update context
-    // login(form.username, form.password);
+      setError('');
+      setSuccess(false);
+
+      if (!form.username || !form.password) {
+        setError('Please enter both username and password.');
+        return;
+      }
+      try {
+          const response = await fetch('http://localhost:3001/auth/login', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  username: form.username,
+                  password: form.password,
+              }),
+              credentials: 'include', 
+          });
+          const data = await response.json();
+          if (response.ok) {
+              console.log('Login successful:', data);
+              setSuccess(true);
+              setError('');
+              setForm({
+                  username: '',
+                  password: ''
+              });
+          } else {
+              console.error('Login failed:', data);
+              setError(data.message || data.error || 'Login failed. Please try again.');
+              setSuccess(false);
+          }
+      } catch (error) {
+          console.error('Error during login:', error);
+          setError('An error occurred while trying to log in. Please try again later.');
+          setSuccess(false);
+      }
   };
 
   return (
