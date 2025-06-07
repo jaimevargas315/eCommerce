@@ -16,7 +16,7 @@ userRouter.get('/users', async (req, res, next) => {
 userRouter.get('/users/:id', async (req, res, next) => {
     const userId = req.params.id;
     try {
-        const result = await query('SELECT * FROM users WHERE id = $1', [userId]);
+        const result = await query('SELECT * FROM users WHERE "userId" = $1', [userId]);
 
         if (results.rows.length > 0) {
             res.json(result.rows[0]);
@@ -37,7 +37,7 @@ userRouter.post('/users', async (req, res, next) => {
 
     try {
         const result = await query(
-            'INSERT INTO users (userid, name, orderid) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+            'INSERT INTO users ("userId", name, orderid) VALUES ($1, $2, $3, $4, $5) RETURNING *',
             [userid, userName, orderid, hashedPassword, salt, type]
         );
         res.status(201).json(result.rows[0]);

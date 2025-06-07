@@ -148,5 +148,40 @@ loginRouter.post('/register', async function (req, res, next) {
     }
 });
 
+loginRouter.post('/logout', (req, res, next) => {
+    req.logout(function (err) {
+        res.clearCookie('connect.sid'); // Adjust cookie name if different
+        if (err) { return next(err); }
+        req.session.destroy((err) => {
+            if (err) {
+                return res.status(500).json({ message: 'Logout failed.' });
+            }
+            res.clearCookie('connect.sid'); // Adjust cookie name if different
+            res.status(200).json({ message: 'Logout successful.' });
+        });
+    });
+ });
+
+loginRouter.get('/current_user', (req, res, next) => {
+    try {
+        if(req.isAuthenticated()) {
+            const user = req.user;
+            res.status(200).json({
+                user: {
+                    user_id: user.userId,
+                    username: user.username,
+                    email: user.email
+                }
+            });
+        } else {
+        res.status(401).json({ message: 'Not authenticated' });
+        }
+    } catch (error) {
+        console.error('Error in /current_user route:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+
 
 export default loginRouter;

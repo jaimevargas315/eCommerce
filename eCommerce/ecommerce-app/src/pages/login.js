@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Login = () => {
+const Login = ({ onLoginSuccess }) => {
   const handleChange = (e) => {
       setForm({ ...form, [e.target.name]: e.target.value });
       setError(''); // Clear error on input change
@@ -35,6 +35,7 @@ const Login = () => {
           const data = await response.json();
           if (response.ok) {
               console.log('Login successful:', data);
+              onLoginSuccess(data.user); // Notify parent component of successful login
               setSuccess(true);
               setError('');
               setForm({

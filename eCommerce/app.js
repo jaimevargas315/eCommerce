@@ -16,6 +16,7 @@ import { dirname } from 'path';
 import cors from 'cors';
 import passport from 'passport';
 import session from 'express-session';
+import { query } from './db/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename)
@@ -62,7 +63,7 @@ passport.serializeUser(function (user, cb) {
 passport.deserializeUser(async function (id, cb) {
     // How to retrieve the full user object from the database based on the ID stored in the session
     try {
-        const result = await query('SELECT userId, username, email FROM users WHERE userId = $1', [id]);
+        const result = await query('SELECT "userId", username, email FROM users WHERE "userId" = $1', [id]);
         const user = result.rows[0];
 
         if (!user) {

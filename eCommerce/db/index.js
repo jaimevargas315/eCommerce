@@ -30,8 +30,6 @@ async function checkConnection() {
 
 await checkConnection();
 
-
-
 export const query = async (text, params) => {
     const start = Date.now()
     const res = await pool.query(text, params)
